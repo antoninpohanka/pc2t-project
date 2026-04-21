@@ -37,6 +37,8 @@ public class Test {
 		
 		db.VypisAbc();
 		
+		db.PocetZam();
+		
 	}
 	
 }

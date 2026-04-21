@@ -116,6 +116,21 @@ public class DB {
 	public void PocetZam() {
 		//efektivnejsi - 2 countery, podle getClass pricist k jednomu nebo druhemu
 		//pocitat pro obe skupiny nebo na zacatku zvolit pro kterou se bude pocitat?
+		
+		int bsPocet = 0;
+		int daPocet = 0;
+		
+		for(Zamestnanec z : DB.values()) {	
+			
+			if(z instanceof BezpSp) {
+				bsPocet++;
+			}else {
+				daPocet++;
+			}
+		}
+		
+		System.out.println("Pocet bezp. sp: " + bsPocet + " Pocet data an: "+ daPocet);
+		
 	}
 	
 	public void ZapisSoubor() {
