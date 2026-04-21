@@ -26,7 +26,16 @@ public class Test {
 		
 		db.VypisDB();
 		
+		//BezpSp bs1 = new BezpSp(5, "John", "Doe", 1999);
+		//System.out.println(bs1.getClass().getSimpleName());
 		
+		//pridat zamestnance Bezp. specialista
+		db.PridatZam("John", "Newman", 1964, false);
+				//pridat zam Data analyst
+		db.PridatZam("John", "Doe", 1964, true);
+		db.PridatZam("John", "DaVinci", 1964, true);
+		
+		db.VypisAbc();
 		
 	}
 	

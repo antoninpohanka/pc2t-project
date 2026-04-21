@@ -1,6 +1,9 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,8 +80,32 @@ public class DB {
 		 * pote pouzit collection.?? metoda na serazeni prijmeni podle abecedy pro kazdy al
 		 * 
 		 * */
-
 		
+		ArrayList<Zamestnanec> BS = new ArrayList<Zamestnanec>();
+		ArrayList<Zamestnanec> DA = new ArrayList<Zamestnanec>();
+		
+		for(Zamestnanec z : DB.values()) {	
+			
+			if(z instanceof BezpSp) {
+				BS.add(z);
+			}else {
+				DA.add(z);
+			}
+		}
+		
+		BS.sort(Comparator.comparing(Zamestnanec::getPrijm));
+		DA.sort(Comparator.comparing(Zamestnanec::getPrijm));
+		
+		System.out.println("Bezp. spec");
+		
+		for (Zamestnanec z : BS) {
+		    System.out.println(z);
+		}
+		
+		System.out.println("Dat. analytici");
+		for (Zamestnanec z : DA) {
+		    System.out.println(z);
+		}
 		
 	}
 	
