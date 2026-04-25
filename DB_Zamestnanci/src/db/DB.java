@@ -63,8 +63,7 @@ public class DB {
 	}
 	
 	public void NajitZam(int IDz) {	
-		System.out.println(DB.get(IDz).toString());
-		
+		System.out.println(DB.get(IDz).toString());	
 	}
 	
 	public void DovedZam(int IDz) {
@@ -109,9 +108,43 @@ public class DB {
 		
 	}
 	
+	
+	//mozna rozdelit na dve metody?
 	public void Stat() {
 		//podobny algoritmus u bezpsp ale aplikovany na celou db
+		int maxSpol = 0;
+		int idMaxSpol = -1;
+		float prumSpol = 0;
+		float prumSpolZam;
+		
+		for(Zamestnanec z : DB.values()) {	
+			
+			if(maxSpol == z.getListZam().size()) {
+				maxSpol = z.getListZam().size();
+				idMaxSpol = z.getID();
+			}
+	
+		//predpokladame, ze kazdy zamestanec muze evidovat spolupraci jinak -> prochazime pro kazdeho mapu 
+		//pocitame jako prumer prumeru - spocitame prumer pro zamestnance a pak prumer z prumeru
+			prumSpolZam = 0;
+			
+			for(UrovSpol u : z.getListZam().values()) {
+				prumSpolZam += u.ordinal()+1;
+			}
+				prumSpolZam = prumSpolZam/z.getListZam().size();
+				prumSpol += prumSpolZam;
+		}
+		
+		prumSpol = prumSpol/DB.size();
+		
+		NajitZam(idMaxSpol);
+		
+		//mozna nechteji prumer, ale jen 3 citace co pocítaji jestli byla kvalita urovne xy a pak jen urcit ten s nejvetsim poctem???? 
+		System.out.println("Prumerna spoluprace je: " + prumSpol);
+		
 	}
+	
+	//1 = nejhorsi spoluprace, 3 nejlepsi
 	
 	public void PocetZam() {
 		//efektivnejsi - 2 countery, podle getClass pricist k jednomu nebo druhemu

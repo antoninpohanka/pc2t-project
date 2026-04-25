@@ -69,9 +69,4 @@ public abstract class Zamestnanec {
 				+ ", listZam=" + listZam + "]";
 	}
 	
-	
-	
-	
-	
-	
 }
