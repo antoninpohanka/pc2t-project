@@ -1,0 +1,6 @@
+BezpSp,1,Jan,Novak,1980
+DataAn,2,Petr,Svoboda,1992
+DataAn,3,Eva,Nova,1985
+
+1,2,2
+1,3,1

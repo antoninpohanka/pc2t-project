@@ -1,8 +1,17 @@
 package db;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
 
 public class DB {
 
@@ -238,12 +247,82 @@ public class DB {
 		System.out.println("---------------------------");
 	}
 
-	public void ZapisSoubor() {
+	public void ZapisSoubor(String jmenoSouboru) {
 		// ukradnout ze cvik
+		try (FileWriter fw=new FileWriter(jmenoSouboru);
+				BufferedWriter bw=new BufferedWriter(fw))
+			{
+				//bw.write("Pocet: "+DB.size());
+				//bw.newLine();
+				for (Zamestnanec z : DB.values()) {
+					if (DB.isEmpty())
+						break;
+					
+					bw.write(z.getClass().getSimpleName() +"," + z.getID() + "," + z.getJmeno() + "," + z.getPrijm() + "," + z.getRokNaroz());
+					bw.newLine();
+				}
+				
+				bw.newLine();
+				
+				for (Zamestnanec z : DB.values()) {
+				for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
+					
+					bw.write(z.getID() + "," + k.getKey() + "," + k.getValue().ordinal());
+					bw.newLine();
+				}
+				}
+			} 
+			catch (IOException e) {
+				System.out.println("Nepodarilo se otevrit soubor");
+			}
 	}
 
-	public void NacistSoubor() {
-		// ukradnout ze cvik
+	//vibecoded
+	public void NacistSoubor(String jmenoSouboru) {
+		try (BufferedReader br = new BufferedReader(new FileReader(jmenoSouboru))) {
+	        String radek;
+	        
+	        while ((radek = br.readLine()) != null) {
+	            // Přeskočíme prázdné řádky, aby program nespadl
+	            if (radek.trim().isEmpty()) continue;
+
+	            // Rozsekáme řádek podle čárky
+	            String[] casti = radek.split(",");
+
+	            try {
+	                // Rozhodujeme podle prvního prvku v poli
+	                switch (casti[0]) {
+	                    case "DataAn":
+	                        int idDA = Integer.parseInt(casti[1]);
+	                        DB.put(idDA, new DataAn(idDA, casti[2], casti[3], Integer.parseInt(casti[4])));
+	                        //PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), true);
+	                        break;
+
+	                    case "BezpSp":
+	                        int idBS = Integer.parseInt(casti[1]);
+	                        DB.put(idBS, new BezpSp(idBS, casti[2], casti[3], Integer.parseInt(casti[4])));
+	                        //PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), false);
+	                        break;
+
+	                    default:
+	                        // Pokud to není textový kód, zkusíme, jestli jde o číselnou vazbu (např. 1,2,2)
+	                        if (casti.length >= 3) {
+	                            int odId = Integer.parseInt(casti[0]);
+	                            int doId = Integer.parseInt(casti[1]);
+	                            int uroven = Integer.parseInt(casti[2]);
+	                            PridatSpol(odId, doId, UrovSpol.values()[uroven]);
+	                        }
+	                        break;
+	                }
+	            } catch (NumberFormatException e) {
+	                System.out.println("Chyba formátu čísla na řádku: " + radek);
+	            } catch (Exception e) {
+	                System.out.println("Chyba při zpracování řádku: " + e.getMessage());
+	            }
+	        }
+	    } catch (IOException e) {
+	        System.out.println("Soubor nelze otevřít nebo číst: " + e.getMessage());
+	    }
 	}
 
 	public void ZapisSQL() {
@@ -272,5 +351,8 @@ public class DB {
 		}
 		System.out.println("================================");
 	}
+	
+	
+	
 
 }
