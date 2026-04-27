@@ -48,7 +48,7 @@ public class DataAn extends Zamestnanec {
 
 	@Override
 	public String toString() {
-		return String.format("[ID: %d] %s %s (nar. %d) - Datový analytik", ID, jmeno, prijm, rokNaroz);
+		return String.format("[ID: %d] %s %s (nar. %d) - Datovy analytik", ID, jmeno, prijm, rokNaroz);
 	}
 
 	@Override

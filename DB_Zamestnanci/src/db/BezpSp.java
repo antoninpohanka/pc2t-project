@@ -44,7 +44,7 @@ public class BezpSp extends Zamestnanec {
 
 	@Override
 	public String toString() {
-		return String.format("[ID: %d] %s %s (nar. %d) - Bezpečnostní specialista", ID, jmeno, prijm, rokNaroz);
+		return String.format("[ID: %d] %s %s (nar. %d) - Bezpecnostni specialista", ID, jmeno, prijm, rokNaroz);
 	}
 
 	@Override

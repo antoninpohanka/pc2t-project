@@ -10,11 +10,11 @@ public class ObsluhaDB {
         this.db = new DB();
 
         // Pro testovani
-        db.PridatZam("Jan", "Novak", 1980, false); // Bezp. spec. (ID 1)
-        db.PridatZam("Petr", "Svoboda", 1992, true); // Dat. analytik (ID 2)
-        db.PridatZam("Eva", "Nova", 1985, true); // Dat. analytik (ID 3)
-        db.PridatSpol(1, 2, UrovSpol.DOBRA);
-        db.PridatSpol(1, 3, UrovSpol.PRUMERNA);
+        // db.PridatZam("Jan", "Novak", 1980, false); // Bezp. spec. (ID 1)
+        // db.PridatZam("Petr", "Svoboda", 1992, true); // Dat. analytik (ID 2)
+        // db.PridatZam("Eva", "Nova", 1985, true); // Dat. analytik (ID 3)
+        // db.PridatSpol(1, 2, UrovSpol.DOBRA);
+        // db.PridatSpol(1, 3, UrovSpol.PRUMERNA);
     }
 
     public void spustitMenu() {
@@ -34,6 +34,8 @@ public class ObsluhaDB {
             System.out.println("7) Vypsat statistiky (zamestnanec s nejvc vazbami)");
             System.out.println("8) Vypis poctu zamestnancu ve skupinach");
             System.out.println("9) Zobrazit celou databazi");
+            System.out.println("10) Ulozit data do textoveho souboru");
+            System.out.println("11) Nacist data z textoveho souboru");
             System.out.println("0) Konec (Zavrit program)");
             System.out.print("Vase volba: ");
 
@@ -113,6 +115,18 @@ public class ObsluhaDB {
                     break;
                 case "9":
                     db.VypisDB();
+                    break;
+                case "10":
+                    System.out.print("Zadejte nazev souboru pro ulozeni (napr. data.txt): ");
+                    String souborZapis = sc.nextLine();
+                    db.ZapisSoubor(souborZapis);
+                    System.out.println("Metoda pro zapis do souboru ukoncena."); // zmenit print
+                    break;
+                case "11":
+                    System.out.print("Zadejte nazev souboru k nacteni (napr. data.txt): ");
+                    String souborNacist = sc.nextLine();
+                    db.NacistSoubor(souborNacist);
+                    System.out.println("Metoda pro cteni ze souboru ukoncena."); // zmenit print
                     break;
                 case "0":
                     bezi = false;
