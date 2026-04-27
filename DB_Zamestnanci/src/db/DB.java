@@ -13,9 +13,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class DB {
 
 	int top = 0;
+	private Connection con;
 
 	// struktura pro polozky databaze
 	public HashMap<Integer, Zamestnanec> DB;
@@ -325,8 +333,66 @@ public class DB {
 	    }
 	}
 
-	public void ZapisSQL() {
-		// ukradnout ze cvik
+	public void ZapisSQL(String jmenoDB) {
+		
+			con = null; 
+		       try {
+		              con = DriverManager.getConnection("jdbc:sqlite:"+jmenoDB);                       
+		       } 
+		      catch (SQLException e) { 
+		            System.out.println(e.getMessage());
+			    //return false;
+		      }
+		      //return true;
+
+		       //DOPLNIT - zkontrolovat, jestli db ma tabulku zamestnanci, pokud ne vytvorit novou??
+		       //jak resit pokud se budou nahravat zamestnanci co maji id spolecne s nejakym s tim v db???
+		   
+		
+		       String sql = "INSERT INTO zamestnanec(ID, jmeno, prijm, rokNar, jeDataAn) VALUES(?,?,?,?,?)";
+		     
+		       
+		       
+		       //zapis zamestnancu
+		       for (Zamestnanec z : DB.values()) {
+		    	   try {
+		               PreparedStatement pstmt = con.prepareStatement(sql); 
+		               pstmt.setInt(1, z.getID());
+		               pstmt.setString(2, z.getJmeno());
+		               pstmt.setString(3, z.getPrijm());
+		               pstmt.setInt(4, z.getRokNaroz());
+		               pstmt.setInt(5, (z.getClass().getSimpleName().equals("DataAn") ? 1:0) );
+		               pstmt.executeUpdate();
+		           } 
+		            catch (SQLException e) {
+		                System.out.println(e.getMessage());
+		           }
+			
+		       }
+		       
+		    //udelat neco podobnyho ale pro druhou tabulku - spoluprace 
+		    // 1:N??, struktura IDz, IDk, UrovSpol ale na INT 
+		    
+		    
+		     
+		       
+		       
+		       
+			if (con != null) {
+				try { 
+					con.close();  
+				} 
+				catch (SQLException e) { 
+				   System.out.println(e.getMessage()); 
+				}
+			}
+		
+		
+		
+		// ukradnout ze cvik .... ups neni uplne ve cvikach
+			
+			
+			
 
 		// potreba dve tabulky
 
@@ -337,6 +403,31 @@ public class DB {
 
 	public void NacistSQL() {
 		// ukradnout ze cvik
+		
+		//vymazat databazi ??? 
+		
+		//PRIDAT ohlidani pripojeni + odpojeni od db
+		
+		String sql = "SELECT * FROM user";
+        try {
+             Statement stmt  = con.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql);
+             while (rs.next()) {
+
+            	 if(rs.getInt("jeDataAn")==1 ? true : false) {
+            		 DB.put(rs.getInt("id_user"), new DataAn(rs.getInt("id_user"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
+            	 }else {
+            		 DB.put(rs.getInt("id_user"), new BezpSp(rs.getInt("id_user"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
+            	 }		
+            }
+        } 
+        catch (SQLException e) {
+             System.out.println(e.getMessage());
+        }
+		
+		//pridat odpojeni
+		
+		
 	}
 
 	// pomocna metoda, vypis databaze
