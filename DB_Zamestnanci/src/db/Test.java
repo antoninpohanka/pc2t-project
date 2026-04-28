@@ -51,7 +51,12 @@ public class Test {
         // }
         // }
         
-        
+         for (Zamestnanec z : db.DB.values()) {
+             for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
+             System.out.println(z.toString() + " " + k.getKey() + ", " + k.getValue());
+             }
+         }
+         
         
   /*     
         if (!db.connect("C:\\dbDemo\\demodb.db"))
@@ -70,6 +75,18 @@ public class Test {
          db.ZapisSQL("C:\\dbDemo\\demodb.db");
          
          
+         db.DB.clear();
+         
+         db.NacistSQL("C:\\dbDemo\\demodb.db");
+         
+         db.VypisDB();
+         
+         for (Zamestnanec z : db.DB.values()) {
+             for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
+             System.out.println(z.toString() + " " + k.getKey() + ", " + k.getValue());
+             }
+         }
+         
     }
-
+    
 }

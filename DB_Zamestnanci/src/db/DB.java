@@ -357,7 +357,7 @@ public class DB {
 	   //sqlite nema boolean - bere int 1 jako true a int 0 jako false
 	   String sqlTabulka = "CREATE TABLE IF NOT EXISTS zamestnanci(" +
 				"jeDataAn INT NOT NULL," +
-                "id INT PRIMARY KEY," +
+                "ID INT PRIMARY KEY," +
                 "jmeno VARCHAR(50) NOT NULL," +
                 "prijm VARCHAR(50) NOT NULL," +
                 "rokNar INT NOT NULL)";
@@ -413,7 +413,7 @@ public class DB {
 		               PreparedStatement pstmt = conn.prepareStatement(sql2); 
 		               pstmt.setInt(1, z.getID());
 		               pstmt.setInt(2, k.getKey());
-		               pstmt.setInt(3, k.getValue().ordinal()+1);
+		               pstmt.setInt(3, k.getValue().ordinal());
 		               pstmt.executeUpdate();
 		           	}
 		            catch (SQLException e) {
@@ -427,7 +427,7 @@ public class DB {
 		     disconnect();     
 		  	}
 
-	public void NacistSQL() {
+	public void NacistSQL(String jmenoDB) {
 		// ukradnout ze cvik
 		//vymazat databazi ???
 		
@@ -435,29 +435,50 @@ public class DB {
 		//connect("jdbc:sqlite:C:\\dbDemo\\demodb.db");	
 		
 		
+		//potreba doplnit osetreni vyjimek
+		
+		if (!connect(jmenoDB))
+	    { 
+		   	//Class.forName("org.sqlite.JDBC"); - mozne reseni pokud nefunguje i s pridanymi JARs
+	    	System.out.println("K databázi se nebylo možné připojit");
+	    	return;
+	    }
 		
 		
-		
-		/*String sql = "SELECT * FROM user";
+		String sql = "SELECT * FROM zamestnanci";
         try {
-             Statement stmt  = con.createStatement();
+             Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql);
              while (rs.next()) {
-
-            	 if(rs.getInt("jeDataAn")==1 ? true : false) {
-            		 DB.put(rs.getInt("id_user"), new DataAn(rs.getInt("id_user"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
+            	 if(rs.getInt("jeDataAn")==1) {
+            		 DB.put(rs.getInt("ID"), new DataAn(rs.getInt("ID"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
             	 }else {
-            		 DB.put(rs.getInt("id_user"), new BezpSp(rs.getInt("id_user"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
+            		 DB.put(rs.getInt("ID"), new BezpSp(rs.getInt("ID"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
             	 }		
             }
         } 
         catch (SQLException e) {
              System.out.println(e.getMessage());
-        }*/
+        }
 		
 		//pridat odpojeni
+        String sql2 = "SELECT * FROM spoluprace";
+        try {
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql2);
+             
+             while (rs.next()) {
+            	 int val = rs.getInt(3);
+            	 PridatSpol(rs.getInt(1), rs.getInt(2), UrovSpol.values()[val]);
+            }
+        } 
+        catch (SQLException e) {
+             System.out.println(e.getMessage());
+        }
 		
-		
+		 System.out.println("KONEC ZVONEC");
+	      
+	     disconnect();  
 	}
 	
 	
@@ -486,9 +507,6 @@ public class DB {
 			}
 		}
 	}
-	
-	
-	
 	
 
 	// pomocna metoda, vypis databaze
