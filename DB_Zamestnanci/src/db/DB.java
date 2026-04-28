@@ -23,7 +23,7 @@ import java.sql.Statement;
 public class DB {
 
 	int top = 0;
-	private Connection con;
+	private Connection conn;
 
 	// struktura pro polozky databaze
 	public HashMap<Integer, Zamestnanec> DB;
@@ -333,82 +333,112 @@ public class DB {
 	    }
 	}
 
+	
+    
+
+// potreba dve tabulky
+
+// prvni zamestnanci klic id, jmeno, prijmeni, roknaroz, skupina
+// druha spouprace klic id zamestnanec, id kolega, uroven spoluprace
 	public void ZapisSQL(String jmenoDB) {
 		
-			con = null; 
-		       try {
-		              con = DriverManager.getConnection("jdbc:sqlite:"+jmenoDB);                       
-		       } 
-		      catch (SQLException e) { 
-		            System.out.println(e.getMessage());
-			    //return false;
-		      }
-		      //return true;
+		if (!connect(jmenoDB))
+	    { 
+		   	//Class.forName("org.sqlite.JDBC"); - mozne reseni pokud nefunguje i s pridanymi JARs
+	    	System.out.println("K databázi se nebylo možné připojit");
+	    	return;
+	    }
+	   
+	   System.out.println("pripojeno");
 
-		       //DOPLNIT - zkontrolovat, jestli db ma tabulku zamestnanci, pokud ne vytvorit novou??
-		       //jak resit pokud se budou nahravat zamestnanci co maji id spolecne s nejakym s tim v db???
-		   
+	   //DOPLNIT - zkontrolovat, jestli db ma tabulku zamestnanci, pokud ne vytvorit novou??  --- asi si handluje samo sql
+	   //jak resit pokud se budou nahravat zamestnanci co maji id spolecne s nejakym s tim v db???
+  	
+	   //sqlite nema boolean - bere int 1 jako true a int 0 jako false
+	   String sqlTabulka = "CREATE TABLE IF NOT EXISTS zamestnanci(" +
+				"jeDataAn INT NOT NULL," +
+                "id INT PRIMARY KEY," +
+                "jmeno VARCHAR(50) NOT NULL," +
+                "prijm VARCHAR(50) NOT NULL," +
+                "rokNar INT NOT NULL)";
+
+	        try {
+	        	Statement pridatTab = conn.createStatement();
+				pridatTab.executeUpdate(sqlTabulka);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		
-		       String sql = "INSERT INTO zamestnanec(ID, jmeno, prijm, rokNar, jeDataAn) VALUES(?,?,?,?,?)";
-		     
-		       
-		       
+		    String sql = "INSERT INTO zamestnanci(jeDataAn, ID, jmeno, prijm, rokNar) VALUES(?,?,?,?,?)";
+ 
 		       //zapis zamestnancu
-		       for (Zamestnanec z : DB.values()) {
+		      for (Zamestnanec z : DB.values()) {
+		    	  
 		    	   try {
-		               PreparedStatement pstmt = con.prepareStatement(sql); 
-		               pstmt.setInt(1, z.getID());
-		               pstmt.setString(2, z.getJmeno());
-		               pstmt.setString(3, z.getPrijm());
-		               pstmt.setInt(4, z.getRokNaroz());
-		               pstmt.setInt(5, (z.getClass().getSimpleName().equals("DataAn") ? 1:0) );
+		               PreparedStatement pstmt = conn.prepareStatement(sql); 
+		               pstmt.setInt(1, (z.getClass().getSimpleName().equals("DataAn") ? 1:0));
+		               pstmt.setInt(2, z.getID());
+		               pstmt.setString(3, z.getJmeno());
+		               pstmt.setString(4, z.getPrijm());
+		               pstmt.setInt(5, z.getRokNaroz());
 		               pstmt.executeUpdate();
 		           } 
 		            catch (SQLException e) {
 		                System.out.println(e.getMessage());
 		           }
-			
-		       }
-		       
-		    //udelat neco podobnyho ale pro druhou tabulku - spoluprace 
-		    // 1:N??, struktura IDz, IDk, UrovSpol ale na INT 
-		    
-		    
+		    	  
+		    	  }
+		    	  
+			    //udelat neco podobnyho ale pro druhou tabulku - spoluprace 
+			    // 1:N??, struktura IDz, IDk, UrovSpol ale na INT 
+
 		     
-		       
-		       
-		       
-			if (con != null) {
-				try { 
-					con.close();  
-				} 
-				catch (SQLException e) { 
-				   System.out.println(e.getMessage()); 
-				}
-			}
-		
-		
-		
-		// ukradnout ze cvik .... ups neni uplne ve cvikach
-			
-			
-			
+		      String sqlTabulka2 = "CREATE TABLE IF NOT EXISTS spoluprace(" +
+						"IDzam INT NOT NULL," +
+		                "IDkol INT NOT NULL," +
+		                "UrovSpol INT NOT NULL)";
 
-		// potreba dve tabulky
+			        try {
+			        	Statement pridatTab = conn.createStatement();
+						pridatTab.executeUpdate(sqlTabulka2);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+			        
+			  String sql2 = "INSERT INTO spoluprace(IDzam, IDkol, UrovSpol) VALUES(?,?,?)";
 
-		// prvni zamestnanci klic id, jmeno, prijmeni, roknaroz, skupina
-		// druha spouprace klic id zamestnanec, id kolega, uroven spoluprace
-
-	}
+		      for (Zamestnanec z : DB.values()) {
+		    	  for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
+		    	   try {
+		               PreparedStatement pstmt = conn.prepareStatement(sql2); 
+		               pstmt.setInt(1, z.getID());
+		               pstmt.setInt(2, k.getKey());
+		               pstmt.setInt(3, k.getValue().ordinal()+1);
+		               pstmt.executeUpdate();
+		           	}
+		            catch (SQLException e) {
+		                System.out.println(e.getMessage());
+		           }
+		    	  }
+		      }
+		      
+		      System.out.println("KONEC ZVONEC");
+		      
+		     disconnect();     
+		  	}
 
 	public void NacistSQL() {
 		// ukradnout ze cvik
-		
-		//vymazat databazi ??? 
+		//vymazat databazi ???
 		
 		//PRIDAT ohlidani pripojeni + odpojeni od db
+		//connect("jdbc:sqlite:C:\\dbDemo\\demodb.db");	
 		
-		String sql = "SELECT * FROM user";
+		
+		
+		
+		
+		/*String sql = "SELECT * FROM user";
         try {
              Statement stmt  = con.createStatement();
              ResultSet rs    = stmt.executeQuery(sql);
@@ -423,12 +453,43 @@ public class DB {
         } 
         catch (SQLException e) {
              System.out.println(e.getMessage());
-        }
+        }*/
 		
 		//pridat odpojeni
 		
 		
 	}
+	
+	
+	//UKRADNUTO ZE CVIK pomocna metoda - pripojeni k db
+	public boolean connect(String dbCesta) { 
+	       conn= null; 
+	       try {
+	              conn = DriverManager.getConnection("jdbc:sqlite:"+dbCesta);                       
+	       } 
+	      catch (SQLException e) { 
+	            System.out.println(e.getMessage());
+		    return false;
+	      }
+	      return true;
+	}
+	
+	
+	//UKRADENO ZE CVIK - pomocna metoda - odpojeni od db
+	public void disconnect() { 
+		if (conn != null) {
+			try { 
+				conn.close();  
+			} 
+			catch (SQLException e) { 
+			   System.out.println(e.getMessage()); 
+			}
+		}
+	}
+	
+	
+	
+	
 
 	// pomocna metoda, vypis databaze
 	public void VypisDB() {
