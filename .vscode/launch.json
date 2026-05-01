@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "DB_Zamestnanci/db.Test",
+            "projectName": "pc2t-project_48460c90"
+        },
+        {
+            "type": "java",
+            "name": "Spustit Databazi",
+            "request": "launch",
+            "mainClass": "db.Test",
+            "projectName": "DB_Zamestnanci",
+            "vmArgs": "--enable-native-access=ALL-UNNAMED"
+        }
+    ]
+}

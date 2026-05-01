@@ -36,6 +36,8 @@ public class ObsluhaDB {
             System.out.println("9) Zobrazit celou databazi");
             System.out.println("10) Ulozit data do textoveho souboru");
             System.out.println("11) Nacist data z textoveho souboru");
+            System.out.println("12) Ulozit data do SQL databaze");
+            System.out.println("13) Nacist data z SQL databaze");
             System.out.println("0) Konec (Zavrit program)");
             System.out.print("Vase volba: ");
 
@@ -127,6 +129,18 @@ public class ObsluhaDB {
                     String souborNacist = sc.nextLine();
                     db.NacistSoubor(souborNacist);
                     System.out.println("Metoda pro cteni ze souboru ukoncena."); // zmenit print
+                    break;
+                case "12":
+                    System.out.print("Zadejte nazev SQL databaze pro ulozeni (napr. firma.db): ");
+                    String dbZapis = sc.nextLine();
+                    db.ZapisSQL(dbZapis);
+                    System.out.println("Zapis do SQL ukoncen.");
+                    break;
+                case "13":
+                    System.out.print("Zadejte nazev SQL databaze k nacteni (napr. firma.db): ");
+                    String dbNacist = sc.nextLine();
+                    db.NacistSQL(dbNacist);
+                    System.out.println("Cteni z SQL dokonceno.");
                     break;
                 case "0":
                     bezi = false;

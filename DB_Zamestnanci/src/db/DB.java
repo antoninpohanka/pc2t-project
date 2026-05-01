@@ -2,7 +2,7 @@ package db;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
+// import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
+// import java.util.Scanner;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -257,257 +257,212 @@ public class DB {
 
 	public void ZapisSoubor(String jmenoSouboru) {
 		// ukradnout ze cvik
-		try (FileWriter fw=new FileWriter(jmenoSouboru);
-				BufferedWriter bw=new BufferedWriter(fw))
-			{
-				//bw.write("Pocet: "+DB.size());
-				//bw.newLine();
-				for (Zamestnanec z : DB.values()) {
-					if (DB.isEmpty())
-						break;
-					
-					bw.write(z.getClass().getSimpleName() +"," + z.getID() + "," + z.getJmeno() + "," + z.getPrijm() + "," + z.getRokNaroz());
-					bw.newLine();
-				}
-				
+		try (FileWriter fw = new FileWriter(jmenoSouboru);
+				BufferedWriter bw = new BufferedWriter(fw)) {
+			// bw.write("Pocet: "+DB.size());
+			// bw.newLine();
+			for (Zamestnanec z : DB.values()) {
+				if (DB.isEmpty())
+					break;
+
+				bw.write(z.getClass().getSimpleName() + "," + z.getID() + "," + z.getJmeno() + "," + z.getPrijm() + ","
+						+ z.getRokNaroz());
 				bw.newLine();
-				
-				for (Zamestnanec z : DB.values()) {
+			}
+
+			bw.newLine();
+
+			for (Zamestnanec z : DB.values()) {
 				for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
-					
+
 					bw.write(z.getID() + "," + k.getKey() + "," + k.getValue().ordinal());
 					bw.newLine();
 				}
-				}
-			} 
-			catch (IOException e) {
-				System.out.println("Nepodarilo se otevrit soubor");
 			}
+		} catch (IOException e) {
+			System.out.println("Nepodarilo se otevrit soubor");
+		}
 	}
 
-	//vibecoded
+	// vibecoded
 	public void NacistSoubor(String jmenoSouboru) {
 		try (BufferedReader br = new BufferedReader(new FileReader(jmenoSouboru))) {
-	        String radek;
-	        
-	        while ((radek = br.readLine()) != null) {
-	            // Přeskočíme prázdné řádky, aby program nespadl
-	            if (radek.trim().isEmpty()) continue;
+			String radek;
 
-	            // Rozsekáme řádek podle čárky
-	            String[] casti = radek.split(",");
+			while ((radek = br.readLine()) != null) {
+				// Přeskočíme prázdné řádky, aby program nespadl
+				if (radek.trim().isEmpty())
+					continue;
 
-	            try {
-	                // Rozhodujeme podle prvního prvku v poli
-	                switch (casti[0]) {
-	                    case "DataAn":
-	                        int idDA = Integer.parseInt(casti[1]);
-	                        DB.put(idDA, new DataAn(idDA, casti[2], casti[3], Integer.parseInt(casti[4])));
-	                        //PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), true);
-	                        break;
+				// Rozsekáme řádek podle čárky
+				String[] casti = radek.split(",");
 
-	                    case "BezpSp":
-	                        int idBS = Integer.parseInt(casti[1]);
-	                        DB.put(idBS, new BezpSp(idBS, casti[2], casti[3], Integer.parseInt(casti[4])));
-	                        //PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), false);
-	                        break;
+				try {
+					// Rozhodujeme podle prvního prvku v poli
+					switch (casti[0]) {
+						case "DataAn":
+							int idDA = Integer.parseInt(casti[1]);
+							DB.put(idDA, new DataAn(idDA, casti[2], casti[3], Integer.parseInt(casti[4])));
+							// PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), true);
+							break;
 
-	                    default:
-	                        // Pokud to není textový kód, zkusíme, jestli jde o číselnou vazbu (např. 1,2,2)
-	                        if (casti.length >= 3) {
-	                            int odId = Integer.parseInt(casti[0]);
-	                            int doId = Integer.parseInt(casti[1]);
-	                            int uroven = Integer.parseInt(casti[2]);
-	                            PridatSpol(odId, doId, UrovSpol.values()[uroven]);
-	                        }
-	                        break;
-	                }
-	            } catch (NumberFormatException e) {
-	                System.out.println("Chyba formátu čísla na řádku: " + radek);
-	            } catch (Exception e) {
-	                System.out.println("Chyba při zpracování řádku: " + e.getMessage());
-	            }
-	        }
-	    } catch (IOException e) {
-	        System.out.println("Soubor nelze otevřít nebo číst: " + e.getMessage());
-	    }
+						case "BezpSp":
+							int idBS = Integer.parseInt(casti[1]);
+							DB.put(idBS, new BezpSp(idBS, casti[2], casti[3], Integer.parseInt(casti[4])));
+							// PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), false);
+							break;
+
+						default:
+							// Pokud to není textový kód, zkusíme, jestli jde o číselnou vazbu (např. 1,2,2)
+							if (casti.length >= 3) {
+								int odId = Integer.parseInt(casti[0]);
+								int doId = Integer.parseInt(casti[1]);
+								int uroven = Integer.parseInt(casti[2]);
+								PridatSpol(odId, doId, UrovSpol.values()[uroven]);
+							}
+							break;
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("Chyba formátu čísla na řádku: " + radek);
+				} catch (Exception e) {
+					System.out.println("Chyba při zpracování řádku: " + e.getMessage());
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Soubor nelze otevřít nebo číst: " + e.getMessage());
+		}
 	}
 
-	
-    
+	// potreba dve tabulky
 
-// potreba dve tabulky
-
-// prvni zamestnanci klic id, jmeno, prijmeni, roknaroz, skupina
-// druha spouprace klic id zamestnanec, id kolega, uroven spoluprace
+	// prvni zamestnanci klic id, jmeno, prijmeni, roknaroz, skupina
+	// druha spouprace klic id zamestnanec, id kolega, uroven spoluprace
 	public void ZapisSQL(String jmenoDB) {
-		
-		if (!connect(jmenoDB))
-	    { 
-		   	//Class.forName("org.sqlite.JDBC"); - mozne reseni pokud nefunguje i s pridanymi JARs
-	    	System.out.println("K databázi se nebylo možné připojit");
-	    	return;
-	    }
-	   
-	   System.out.println("pripojeno");
+		if (!connect(jmenoDB)) {
+			System.out.println("K databazi se nebylo mozne pripojit");
+			return;
+		}
 
-	   //DOPLNIT - zkontrolovat, jestli db ma tabulku zamestnanci, pokud ne vytvorit novou??  --- asi si handluje samo sql
-	   //jak resit pokud se budou nahravat zamestnanci co maji id spolecne s nejakym s tim v db???
-  	
-	   //sqlite nema boolean - bere int 1 jako true a int 0 jako false
-	   String sqlTabulka = "CREATE TABLE IF NOT EXISTS zamestnanci(" +
-				"jeDataAn INT NOT NULL," +
-                "ID INT PRIMARY KEY," +
-                "jmeno VARCHAR(50) NOT NULL," +
-                "prijm VARCHAR(50) NOT NULL," +
-                "rokNar INT NOT NULL)";
+		try (Statement stmt = conn.createStatement()) {
+			// vytvoreni tabulek
+			stmt.execute(
+					"CREATE TABLE IF NOT EXISTS zamestnanci (jeDataAn INT, ID INT PRIMARY KEY, jmeno VARCHAR(50), prijm VARCHAR(50), rokNar INT)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS spoluprace (IDzam INT, IDkol INT, UrovSpol INT)");
 
-	        try {
-	        	Statement pridatTab = conn.createStatement();
-				pridatTab.executeUpdate(sqlTabulka);
-			} catch (SQLException e) {
-				e.printStackTrace();
+			// vymazani starych dat, aby nedoslo k padu kvuli duplicitnim ID pri
+			// opakovanem zapisu
+			stmt.execute("DELETE FROM zamestnanci");
+			stmt.execute("DELETE FROM spoluprace");
+
+			// zapis vsech zamestnancu
+			String sqlZam = "INSERT INTO zamestnanci(jeDataAn, ID, jmeno, prijm, rokNar) VALUES(?,?,?,?,?)";
+			try (PreparedStatement pstmtZam = conn.prepareStatement(sqlZam)) {
+				for (Zamestnanec z : DB.values()) {
+					pstmtZam.setInt(1, (z instanceof DataAn) ? 1 : 0);
+					pstmtZam.setInt(2, z.getID());
+					pstmtZam.setString(3, z.getJmeno());
+					pstmtZam.setString(4, z.getPrijm());
+					pstmtZam.setInt(5, z.getRokNaroz());
+					pstmtZam.executeUpdate();
+				}
 			}
-		
-		    String sql = "INSERT INTO zamestnanci(jeDataAn, ID, jmeno, prijm, rokNar) VALUES(?,?,?,?,?)";
- 
-		       //zapis zamestnancu
-		      for (Zamestnanec z : DB.values()) {
-		    	  
-		    	   try {
-		               PreparedStatement pstmt = conn.prepareStatement(sql); 
-		               pstmt.setInt(1, (z.getClass().getSimpleName().equals("DataAn") ? 1:0));
-		               pstmt.setInt(2, z.getID());
-		               pstmt.setString(3, z.getJmeno());
-		               pstmt.setString(4, z.getPrijm());
-		               pstmt.setInt(5, z.getRokNaroz());
-		               pstmt.executeUpdate();
-		           } 
-		            catch (SQLException e) {
-		                System.out.println(e.getMessage());
-		           }
-		    	  
-		    	  }
-		    	  
-			    //udelat neco podobnyho ale pro druhou tabulku - spoluprace 
-			    // 1:N??, struktura IDz, IDk, UrovSpol ale na INT 
 
-		     
-		      String sqlTabulka2 = "CREATE TABLE IF NOT EXISTS spoluprace(" +
-						"IDzam INT NOT NULL," +
-		                "IDkol INT NOT NULL," +
-		                "UrovSpol INT NOT NULL)";
-
-			        try {
-			        	Statement pridatTab = conn.createStatement();
-						pridatTab.executeUpdate(sqlTabulka2);
-					} catch (SQLException e) {
-						e.printStackTrace();
+			// zapis vsech spolupraci
+			String sqlSpol = "INSERT INTO spoluprace(IDzam, IDkol, UrovSpol) VALUES(?,?,?)";
+			try (PreparedStatement pstmtSpol = conn.prepareStatement(sqlSpol)) {
+				for (Zamestnanec z : DB.values()) {
+					for (Map.Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
+						pstmtSpol.setInt(1, z.getID());
+						pstmtSpol.setInt(2, k.getKey());
+						pstmtSpol.setInt(3, k.getValue().ordinal());
+						pstmtSpol.executeUpdate();
 					}
-			        
-			  String sql2 = "INSERT INTO spoluprace(IDzam, IDkol, UrovSpol) VALUES(?,?,?)";
+				}
+			}
+			System.out.println("Zapis do SQL uspesne dokoncen.");
 
-		      for (Zamestnanec z : DB.values()) {
-		    	  for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
-		    	   try {
-		               PreparedStatement pstmt = conn.prepareStatement(sql2); 
-		               pstmt.setInt(1, z.getID());
-		               pstmt.setInt(2, k.getKey());
-		               pstmt.setInt(3, k.getValue().ordinal());
-		               pstmt.executeUpdate();
-		           	}
-		            catch (SQLException e) {
-		                System.out.println(e.getMessage());
-		           }
-		    	  }
-		      }
-		      
-		      System.out.println("KONEC ZVONEC");
-		      
-		     disconnect();     
-		  	}
+		} catch (SQLException e) {
+			System.out.println("Chyba SQL: " + e.getMessage());
+		} finally {
+			disconnect();
+		}
+	}
 
 	public void NacistSQL(String jmenoDB) {
-		// ukradnout ze cvik
-		//vymazat databazi ???
-		
-		//PRIDAT ohlidani pripojeni + odpojeni od db
-		//connect("jdbc:sqlite:C:\\dbDemo\\demodb.db");	
-		
-		
-		//potreba doplnit osetreni vyjimek
-		
-		if (!connect(jmenoDB))
-	    { 
-		   	//Class.forName("org.sqlite.JDBC"); - mozne reseni pokud nefunguje i s pridanymi JARs
-	    	System.out.println("K databázi se nebylo možné připojit");
-	    	return;
-	    }
-		
-		
-		String sql = "SELECT * FROM zamestnanci";
-        try {
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql);
-             while (rs.next()) {
-            	 if(rs.getInt("jeDataAn")==1) {
-            		 DB.put(rs.getInt("ID"), new DataAn(rs.getInt("ID"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
-            	 }else {
-            		 DB.put(rs.getInt("ID"), new BezpSp(rs.getInt("ID"), rs.getString("jmeno"), rs.getString("prijm"), rs.getInt("rokNar")));
-            	 }		
-            }
-        } 
-        catch (SQLException e) {
-             System.out.println(e.getMessage());
-        }
-		
-		//pridat odpojeni
-        String sql2 = "SELECT * FROM spoluprace";
-        try {
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql2);
-             
-             while (rs.next()) {
-            	 int val = rs.getInt(3);
-            	 PridatSpol(rs.getInt(1), rs.getInt(2), UrovSpol.values()[val]);
-            }
-        } 
-        catch (SQLException e) {
-             System.out.println(e.getMessage());
-        }
-		
-		 System.out.println("KONEC ZVONEC");
-	      
-	     disconnect();  
+		if (!connect(jmenoDB)) {
+			System.out.println("K databazi se nebylo mozne pripojit");
+			return;
+		}
+
+		// vymazani aktualni pameti programu pred nactenim dat
+		DB.clear();
+		top = 0;
+
+		try (Statement stmt = conn.createStatement()) {
+			// nacteni zamestnancu
+			ResultSet rsZam = stmt.executeQuery("SELECT * FROM zamestnanci");
+			while (rsZam.next()) {
+				int id = rsZam.getInt("ID");
+				String jmeno = rsZam.getString("jmeno");
+				String prijm = rsZam.getString("prijm");
+				int rokNar = rsZam.getInt("rokNar");
+				int jeDataAn = rsZam.getInt("jeDataAn");
+
+				Zamestnanec z;
+				if (jeDataAn == 1) {
+					z = new DataAn(id, jmeno, prijm, rokNar);
+				} else {
+					z = new BezpSp(id, jmeno, prijm, rokNar);
+				}
+				DB.put(id, z);
+
+				// kontrola cislovani pro nove zamestnance
+				if (id > top)
+					top = id;
+			}
+
+			// nacteni spolupraci a jejich prirazeni
+			ResultSet rsSpol = stmt.executeQuery("SELECT * FROM spoluprace");
+			while (rsSpol.next()) {
+				int idZ = rsSpol.getInt("IDzam");
+				int idK = rsSpol.getInt("IDkol");
+				int urov = rsSpol.getInt("UrovSpol");
+
+				if (DB.containsKey(idZ)) {
+					DB.get(idZ).getListZam().put(idK, UrovSpol.values()[urov]);
+				}
+			}
+			System.out.println("Data z SQL uspesne nactena.");
+
+		} catch (SQLException e) {
+			System.out.println("Chyba SQL: " + e.getMessage());
+		} finally {
+			disconnect();
+		}
 	}
-	
-	
-	//UKRADNUTO ZE CVIK pomocna metoda - pripojeni k db
-	public boolean connect(String dbCesta) { 
-	       conn= null; 
-	       try {
-	              conn = DriverManager.getConnection("jdbc:sqlite:"+dbCesta);                       
-	       } 
-	      catch (SQLException e) { 
-	            System.out.println(e.getMessage());
-		    return false;
-	      }
-	      return true;
+
+	// UKRADNUTO ZE CVIK pomocna metoda - pripojeni k db
+	public boolean connect(String dbCesta) {
+		conn = null;
+		try {
+			conn = DriverManager.getConnection("jdbc:sqlite:" + dbCesta);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
 	}
-	
-	
-	//UKRADENO ZE CVIK - pomocna metoda - odpojeni od db
-	public void disconnect() { 
+
+	// UKRADENO ZE CVIK - pomocna metoda - odpojeni od db
+	public void disconnect() {
 		if (conn != null) {
-			try { 
-				conn.close();  
-			} 
-			catch (SQLException e) { 
-			   System.out.println(e.getMessage()); 
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
-	
 
 	// pomocna metoda, vypis databaze
 	public void VypisDB() {
@@ -521,8 +476,5 @@ public class DB {
 		}
 		System.out.println("================================");
 	}
-	
-	
-	
 
 }
