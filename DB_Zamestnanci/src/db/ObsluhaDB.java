@@ -29,7 +29,9 @@ public class ObsluhaDB {
             System.out.println("2) Pridat spolupraci");
             System.out.println("3) Odebrat zamestnance");
             System.out.println("4) Vyhledat zamestnance (dle ID)");
-            System.out.println("5) Zobrazit riziko spoluprace zamestnance (dle ID)");
+            //prepsat print na neco jako spusteni dovednosti zamestnance
+            //System.out.println("5) Zobrazit riziko spoluprace zamestnance (dle ID)");
+            System.out.println("5) Spustit dovednost zamestnance (dle ID)");
             System.out.println("6) Abecedni vypis zamestnancu");
             System.out.println("7) Vypsat statistiky (zamestnanec s nejvc vazbami)");
             System.out.println("8) Vypis poctu zamestnancu ve skupinach");
@@ -50,7 +52,10 @@ public class ObsluhaDB {
                     System.out.print("Prijmeni: ");
                     String prijmeni = sc.nextLine();
                     System.out.print("Rok narozeni: ");
-                    int rok = Integer.parseInt(sc.nextLine());
+                    //kde osetrovat roky???
+                    //int rok = Integer.parseInt(sc.nextLine());
+                    int rok = zkusNacistInt(sc, 1940, 2010);
+                    //potrebuje osetrit vyjimku kdyz se zada text
                     System.out.print("Je datovy analytik? (ano/ne): ");
                     boolean jeDa = sc.nextLine().trim().equalsIgnoreCase("ano");
                     db.PridatZam(jmeno, prijmeni, rok, jeDa);
@@ -58,23 +63,28 @@ public class ObsluhaDB {
                     break;
                 case "2":
                     System.out.print("Zadejte vase ID: ");
-                    int idZ = Integer.parseInt(sc.nextLine());
+                    //int idZ = Integer.parseInt(sc.nextLine());
+                    int idZ = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
                     System.out.print("Zadejte ID kolegy: ");
-                    int idK = Integer.parseInt(sc.nextLine());
+                    //int idK = Integer.parseInt(sc.nextLine());
+                    int idK = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
 
                     // kontrola hned po zadani ID, aby se neresila uroven zbytecne
-                    if (idZ == idK) {
+                    /*if (idZ == idK) {
                         System.out.println("Chyba: Zamestnanec nemuze spolupracovat sam se sebou.");
                         break; // ukonci tento case a vrati se do hlavniho menu
-                    }
-
+                    //osetrit aby se mohli pridat zamestnanci jen co jsou v DB
+                    }*/
+                    
                     System.out.println("Vyberte uroven spoluprace (ciselne): ");
                     System.out.println("(1) Spatna ");
                     System.out.println("(2) Prumerna ");
                     System.out.println("(3) Dobra ");
-                    int uroven = Integer.parseInt(sc.nextLine());
-
-                    UrovSpol u = UrovSpol.PRUMERNA;
+      
+                    int uroven = zkusNacistInt(sc, 1, 3);
+                    
+                    //nelze nastavit prumerna uroven?????
+                    /*UrovSpol u = UrovSpol.PRUMERNA;
                     if (uroven == 1)
                         u = UrovSpol.SPATNA;
                     else if (uroven == 3)
@@ -82,28 +92,29 @@ public class ObsluhaDB {
                     else {
                         System.out.println("Chybne zadana uroven.");
                         break;
-                    }
+                    }*/
 
                     // Vypise uspesne zapsani jen tehdy, kdyz metoda vrati true (napr. pokud obe ID
                     // existuji); zmenil jsem metodu PridatSpol, aby vracela boolean
-                    if (db.PridatSpol(idZ, idK, u)) {
-                        System.out.println("Spoluprace zapsana.");
-                    }
+                    
                     break;
                 case "3":
                     System.out.print("Zadejte ID k odebrani: ");
-                    int idO = Integer.parseInt(sc.nextLine());
+                    //int idO = Integer.parseInt(sc.nextLine());
+                    int idO = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
                     db.OdebratZam(idO);
                     System.out.println("Pokus o smazani probehl.");
                     break;
                 case "4":
                     System.out.print("Zadejte ID zamestnance k vyhledani: ");
-                    int idV = Integer.parseInt(sc.nextLine());
+                    //int idV = Integer.parseInt(sc.nextLine()); 
+                    int idV = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
                     db.NajitZam(idV);
                     break;
                 case "5":
                     System.out.print("Zadejte ID zamestnance pro spusteni dovednosti: ");
-                    int idD = Integer.parseInt(sc.nextLine());
+                    //int idD = Integer.parseInt(sc.nextLine());
+                    int idD = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
                     db.DovedZam(idD);
                     break;
                 case "6":
@@ -119,10 +130,12 @@ public class ObsluhaDB {
                     db.VypisDB();
                     break;
                 case "10":
+                	//jak osetrit, kdyz soubor bude v jinem tvaru nez pozadovanem??? 
                     System.out.print("Zadejte nazev souboru pro ulozeni (napr. data.txt): ");
                     String souborZapis = sc.nextLine();
                     db.ZapisSoubor(souborZapis);
-                    System.out.println("Metoda pro zapis do souboru ukoncena."); // zmenit print
+                    //System.out.println("Metoda pro zapis do souboru ukoncena."); // zmenit print
+                    System.out.println("Zapis do souboru ukoncen.");
                     break;
                 case "11":
                     System.out.print("Zadejte nazev souboru k nacteni (napr. data.txt): ");
@@ -151,5 +164,24 @@ public class ObsluhaDB {
             }
         }
         sc.close();
+    }
+    
+    public int zkusNacistInt(Scanner sc, int min, int max) {
+    
+    	while (true) {
+    		try {
+    			String vstup = sc.nextLine();
+    			int cislo=Integer.parseInt(vstup);
+    			if(cislo<min || cislo>max) {
+    				System.out.println("Chyba: Cislo musi byt mezi " + min + " - " + max);
+    			}else {	
+    				return cislo;
+    			}	
+    		} catch (NumberFormatException e) {
+    			System.out.println("Nebylo zadano cele cislo");
+    	    }	
+			
+		}
+    	
     }
 }

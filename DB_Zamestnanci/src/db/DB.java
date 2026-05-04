@@ -52,9 +52,14 @@ public class DB {
 		return top;
 	}
 
-	public void OdebratZam(int IDz) {
+	public boolean OdebratZam(int IDz) {
 		// poslat vyjimky vys
 		// osetrit - prazdna DB, zamestnanec neexistuje
+		if (!DB.containsKey(IDz)) {
+			System.out.println("Chyba: Zamestnanec s ID " + IDz + " neexistuje.");
+			return false;
+		}
+		
 		DB.remove(IDz);
 
 		// odebere vazby
@@ -62,6 +67,8 @@ public class DB {
 			z.getListZam().remove(IDz);
 		}
 
+		return true;
+		
 	}
 
 	public boolean PridatSpol(int IDz, int IDk, UrovSpol u) {
@@ -99,11 +106,11 @@ public class DB {
 		return true;
 	}
 
-	public void NajitZam(int IDz) {
+	public boolean NajitZam(int IDz) {
 		// osetreni, jestli vubec existuje zamestnanec
 		if (!DB.containsKey(IDz)) {
 			System.out.println("Zamestnanec s ID " + IDz + " neexistuje.");
-			return;
+			return false;
 		}
 
 		Zamestnanec z = DB.get(IDz);
@@ -130,6 +137,8 @@ public class DB {
 			System.out.printf("Prumerna kvalita spoluprace: %.2f (1=nejhorsi, 3=nejlepsi)%n", prumSpol);
 		}
 		System.out.println("-----------------------------------");
+		
+		return true;
 	}
 
 	public void DovedZam(int IDz) {
