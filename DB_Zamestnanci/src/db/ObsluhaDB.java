@@ -151,4 +151,11 @@ public class ObsluhaDB {
 		}
     	
     }
+    
+    public static void main(String[] args) {
+		ObsluhaDB db = new ObsluhaDB();
+		
+		db.spustitMenu();
+	}
+    
 }
