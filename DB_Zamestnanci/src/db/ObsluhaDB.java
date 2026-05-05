@@ -67,14 +67,17 @@ public class ObsluhaDB {
       
                     int uroven = zkusNacistInt(sc, 1, 3);
                     
-                   db.PridatSpol(idZ, idK, UrovSpol.values()[uroven-1]);
+                    if(db.PridatSpol(idZ, idK, UrovSpol.values()[uroven-1])) {
+                    	System.out.println("Spoluprace byla pridana");
+                    }
                     
                     break;
                 case "3":
                     System.out.print("Zadejte ID k odebrani: ");
                     int idO = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
-                    db.OdebratZam(idO);
-                    System.out.println("Pokus o smazani probehl.");
+                    if(db.OdebratZam(idO)) {
+                    	System.out.println("Pokus o smazani probehl.");
+                    } 
                     break;
                 case "4":
                     System.out.print("Zadejte ID zamestnance k vyhledani: ");
