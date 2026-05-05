@@ -262,11 +262,13 @@ public class DB {
 						case "DataAn":
 							int idDA = Integer.parseInt(casti[1]);
 							DB.put(idDA, new DataAn(idDA, casti[2], casti[3], Integer.parseInt(casti[4])));
+							top++;
 							break;
 
 						case "BezpSp":
 							int idBS = Integer.parseInt(casti[1]);
 							DB.put(idBS, new BezpSp(idBS, casti[2], casti[3], Integer.parseInt(casti[4])));
+							top++;
 							break;
 
 						default:
@@ -356,8 +358,10 @@ public class DB {
 				Zamestnanec z;
 				if (jeDataAn == 1) {
 					z = new DataAn(id, jmeno, prijm, rokNar);
+					top++;
 				} else {
 					z = new BezpSp(id, jmeno, prijm, rokNar);
+					top++;
 				}
 				DB.put(id, z);
 
