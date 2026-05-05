@@ -1,7 +1,6 @@
 package db;
 
 import java.util.HashMap;
-import java.util.Scanner;
 
 
 public class BezpSp extends Zamestnanec {
@@ -18,33 +17,15 @@ public class BezpSp extends Zamestnanec {
 
 	@Override
 	public void dovednost(HashMap<Integer, Zamestnanec> db) {
-		
-		Scanner sc1 = new Scanner(System.in);;
-		
-		int IDkol =0;
+		System.out.println("Tento zamestnanec nema pristup k teto metode");
+	}
+
+	@Override
+	public void dovednost(HashMap<Integer, Zamestnanec> db, int IDkol) {
 		
 		int spolUrov = 0;
 		int spolPoc = 0;
 		int celkSpol =0;
-		
-		boolean loop = true;
-		
-		while (loop) {
-    		try {
-    			System.out.println("Zadejte cislo kolegy: ");
-    			String vstup = sc1.nextLine();
-    			int cislo=Integer.parseInt(vstup);
-    			if(cislo<1 || cislo>db.size()) {
-    				System.out.println("Chyba: Cislo musi byt mezi 0" + " - " + db.size());
-    			}else {	
-    				IDkol = cislo;
-    				loop = false;
-    			}	
-    		} catch (NumberFormatException e) {
-    			System.out.println("Nebylo zadano cele cislo");
-    	    } 
-			
-		}
 		
 		if(!db.containsKey(IDkol)) {
 			return;

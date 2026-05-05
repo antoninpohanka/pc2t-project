@@ -49,4 +49,9 @@ public class DataAn extends Zamestnanec {
 		return String.format("[ID: %d] %s %s (nar. %d) - Datovy analytik", ID, jmeno, prijm, rokNaroz);
 	}
 
+	@Override
+	public void dovednost(HashMap<Integer, Zamestnanec> db, int IDkol) {
+		System.out.println("Tento zamestnanec nema pristup k teto metode");
+	}
+
 }

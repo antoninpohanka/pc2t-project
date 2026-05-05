@@ -53,6 +53,8 @@ public abstract class Zamestnanec {
 	
 	public abstract void dovednost(HashMap<Integer, Zamestnanec> db);
 	
+	public abstract void dovednost(HashMap<Integer, Zamestnanec> db, int IDkol);
+	
 	public int getID() {
 		return ID;
 	}

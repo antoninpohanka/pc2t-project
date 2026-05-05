@@ -358,10 +358,8 @@ public class DB {
 				Zamestnanec z;
 				if (jeDataAn == 1) {
 					z = new DataAn(id, jmeno, prijm, rokNar);
-					top++;
 				} else {
 					z = new BezpSp(id, jmeno, prijm, rokNar);
-					top++;
 				}
 				DB.put(id, z);
 

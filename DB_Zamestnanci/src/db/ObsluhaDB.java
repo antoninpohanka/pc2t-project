@@ -52,9 +52,9 @@ public class ObsluhaDB {
                     break;
                 case "2":
                     System.out.print("Zadejte vase ID: ");
-                    int idZ = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
+                    int idZ = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
                     System.out.print("Zadejte ID kolegy: ");
-                    int idK = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
+                    int idK = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
                     if (idZ == idK) {
                         System.out.println("Chyba: Zamestnanec nemuze spolupracovat sam se sebou.");
                         break; 
@@ -72,19 +72,28 @@ public class ObsluhaDB {
                     break;
                 case "3":
                     System.out.print("Zadejte ID k odebrani: ");
-                    int idO = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
+                    int idO = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
                     db.OdebratZam(idO);
                     System.out.println("Pokus o smazani probehl.");
                     break;
                 case "4":
                     System.out.print("Zadejte ID zamestnance k vyhledani: ");
-                    int idV = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
+                    int idV = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
                     db.NajitZam(idV);
                     break;
                 case "5":
                     System.out.print("Zadejte ID zamestnance pro spusteni dovednosti: ");
-                    int idD = zkusNacistInt(sc, 0, Integer.MAX_VALUE);
-                    db.DovedZam(idD);
+                    int idD = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
+                    Zamestnanec z = db.DB.get(idD);
+                    if (z instanceof DataAn) {
+            			z.dovednost(db.DB);
+            		} else if (z instanceof BezpSp) {
+            			System.out.print("Zadejte ID kolegy pro zjisteni rizika spoluprace: ");
+            			int idkol = zkusNacistInt(sc, 1, Integer.MAX_VALUE);
+            			z.dovednost(db.DB, idkol);
+            		} else {
+            			System.out.println("Nastala chyba v aplikaci");
+            		}
                     break;
                 case "6":
                     db.VypisAbc();
