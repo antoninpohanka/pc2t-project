@@ -52,21 +52,22 @@ public class BezpSp extends Zamestnanec {
 	@Override
 	public void dovednost(HashMap<Integer, Zamestnanec> db) {
 		
-		Scanner sc = new Scanner(System.in);;
+		Scanner sc1 = new Scanner(System.in);;
 		
 		int IDkol =0;
 		
 		int spolUrov = 0;
 		int spolPoc = 0;
+		int celkSpol =0;
 		
 		boolean loop = true;
 		
 		while (loop) {
     		try {
     			System.out.println("Zadejte cislo kolegy: ");
-    			String vstup = sc.nextLine();
+    			String vstup = sc1.nextLine();
     			int cislo=Integer.parseInt(vstup);
-    			if(cislo<0 || cislo>db.size()) {
+    			if(cislo<1 || cislo>db.size()) {
     				System.out.println("Chyba: Cislo musi byt mezi 0" + " - " + db.size());
     			}else {	
     				IDkol = cislo;
@@ -74,14 +75,23 @@ public class BezpSp extends Zamestnanec {
     			}	
     		} catch (NumberFormatException e) {
     			System.out.println("Nebylo zadano cele cislo");
-    	    }	
+    	    } 
 			
 		}
-	
+		
+		if(!db.containsKey(IDkol)) {
+			return;
+		}
+		
+		
 		for (Zamestnanec z : db.values()) {			
 			if(z.getListZam().containsKey(IDkol)) {
-				spolUrov+=z.getListZam().get(IDkol).ordinal();
+				spolUrov+=z.getListZam().get(IDkol).ordinal()+1;
 				spolPoc++;
+			}
+			
+			for (UrovSpol u : z.getListZam().values()) {
+				celkSpol += u.ordinal()+1;
 			}
 			
 		}
@@ -94,13 +104,13 @@ public class BezpSp extends Zamestnanec {
 		if(spolPoc==0) {
 			System.out.println("Zamestnanec nema zadne spoluprace, riziko nelze vyhodnotit");
 		}else {
-			prumSpol = 10 - (((spolUrov/spolPoc)/(prumSpol/db.size())) * (10 / 3));
+			prumSpol = 10 - (((spolUrov/spolPoc)/(celkSpol/db.size())) * (10 / 3));
 
 		String riziko;
 
 		if (prumSpol < 4) {
 			riziko = "nizke";
-		} else if (prumSpol >= 4 || prumSpol <= 6) {
+		} else if (prumSpol >= 4 && prumSpol <= 6) {
 			riziko = "stredni";
 		} else {
 			riziko = "vysoke";
@@ -109,7 +119,7 @@ public class BezpSp extends Zamestnanec {
 		System.out.println("Riziko spoluprace je: " + prumSpol + " - " + riziko);
 		}
 		
-		sc.close();
+
 	}
 		
 	
