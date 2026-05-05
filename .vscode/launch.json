@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "DB_Zamestnanci/db.Main",
+            "projectName": "pc2t-project_48460c90"
+        },
+        {
+            "type": "java",
             "name": "Test",
             "request": "launch",
             "mainClass": "DB_Zamestnanci/db.Test",
