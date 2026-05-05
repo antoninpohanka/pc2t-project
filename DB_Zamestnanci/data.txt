@@ -1,12 +1,22 @@
 DataAn,1,John,Doe,1999
 BezpSp,2,Jane,Doe,1988
-DataAn,3,John,Doe,1999
-BezpSp,4,Jane,Doe,1988
-DataAn,5,John,Doe,1999
-BezpSp,6,Jane,Doe,1988
+DataAn,3,Adam,Novotny,1968
+BezpSp,4,Franta,Oprsalek,1975
+DataAn,5,Jiri,Kasparek,2000
+BezpSp,6,Dita,Svobodova,1986
 
 1,2,1
 1,3,1
 1,4,2
 1,5,2
+2,1,1
+2,3,3
+2,4,2
+2,6,1
+3,1,1
+3,4,3
+6,1,1
+5,4,2
+5,3,1
+
 

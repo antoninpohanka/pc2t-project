@@ -234,7 +234,7 @@ public class DB {
 
 			for (Zamestnanec z : DB.values()) {
 				for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
-					bw.write(z.getID() + "," + k.getKey() + "," + k.getValue().ordinal());
+					bw.write(z.getID() + "," + k.getKey() + "," + (k.getValue().ordinal()+1));
 					bw.newLine();
 				}
 			}
@@ -276,7 +276,7 @@ public class DB {
 								int odId = Integer.parseInt(casti[0]);
 								int doId = Integer.parseInt(casti[1]);
 								int uroven = Integer.parseInt(casti[2]);
-								PridatSpol(odId, doId, UrovSpol.values()[uroven]);
+								PridatSpol(odId, doId, UrovSpol.values()[uroven-1]);
 							}
 							break;
 					}
@@ -323,7 +323,7 @@ public class DB {
 					for (Map.Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
 						pstmtSpol.setInt(1, z.getID());
 						pstmtSpol.setInt(2, k.getKey());
-						pstmtSpol.setInt(3, k.getValue().ordinal());
+						pstmtSpol.setInt(3, k.getValue().ordinal()+1);
 						pstmtSpol.executeUpdate();
 					}
 				}
@@ -374,7 +374,7 @@ public class DB {
 				int urov = rsSpol.getInt("UrovSpol");
 
 				if (DB.containsKey(idZ)) {
-					DB.get(idZ).getListZam().put(idK, UrovSpol.values()[urov]);
+					DB.get(idZ).getListZam().put(idK, UrovSpol.values()[urov-1]);
 				}
 			}
 			System.out.println("Data z SQL uspesne nactena.");
