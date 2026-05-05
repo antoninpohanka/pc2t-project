@@ -25,10 +25,8 @@ public class DB {
 	int top = 0;
 	private Connection conn;
 
-	// struktura pro polozky databaze
 	public HashMap<Integer, Zamestnanec> DB;
 
-	// inicializace db
 	public DB() {
 		this.DB = new HashMap<Integer, Zamestnanec>();
 	}
@@ -44,25 +42,18 @@ public class DB {
 		}
 
 	}
-
-	// pomocná metoda pro generovaní id, prozatím jen inkrementuje hodnotu
-	// id=1,2,3...
 	public int IDgen() {
 		top++;
 		return top;
 	}
 
 	public boolean OdebratZam(int IDz) {
-		// poslat vyjimky vys
-		// osetrit - prazdna DB, zamestnanec neexistuje
 		if (!DB.containsKey(IDz)) {
 			System.out.println("Chyba: Zamestnanec s ID " + IDz + " neexistuje.");
 			return false;
 		}
 		
 		DB.remove(IDz);
-
-		// odebere vazby
 		for (Zamestnanec z : DB.values()) {
 			z.getListZam().remove(IDz);
 		}
@@ -72,19 +63,6 @@ public class DB {
 	}
 
 	public boolean PridatSpol(int IDz, int IDk, UrovSpol u) {
-		// DB.get(IDz).getListZam().put(IDk, u);
-		// osetrit prazdna DB, zamestnanec neexistuje, kolega neexistuje
-
-		// jak vnimat spoluprace? - kdyz se zada nova spoluprace s kolegou co uz ma
-		// praci evidovanou
-
-		// prepise se na novou uroven nebo se zprumeruje - potom by se uroven spoluprace
-		// musela evidovat jako kombinace dvou parametru = prumer urovne spoluprace
-		// 1=dobra, 2=prumerna, 3=spatna a counter pocitajici pocet spolupraci co byly
-		// zadany
-
-		// bezpecak bere vsechny spoluprace a pokud mas spatny prumer, tak jsi riziko;
-		// analytik hleda spolecne zname
 
 		if (!DB.containsKey(IDz)) {
 			System.out.println("Chyba: Zamestnanec s ID " + IDz + " neexistuje.");
@@ -95,8 +73,6 @@ public class DB {
 			System.out.println("Chyba: Kolega s ID " + IDk + " neexistuje.");
 			return false;
 		}
-
-		// kontrola, jestli si nehodnoti sam sebe
 		if (IDz == IDk) {
 			System.out.println("Chyba: Zamestnanec nemuze evidovat spolupraci sam se sebou.");
 			return false;
@@ -107,7 +83,6 @@ public class DB {
 	}
 
 	public boolean NajitZam(int IDz) {
-		// osetreni, jestli vubec existuje zamestnanec
 		if (!DB.containsKey(IDz)) {
 			System.out.println("Zamestnanec s ID " + IDz + " neexistuje.");
 			return false;
@@ -120,8 +95,7 @@ public class DB {
 		System.out.println("Rok naroz: " + z.getRokNaroz());
 		System.out.println("Pozice: " + (z instanceof BezpSp ? "Bezpecnostni specialista" : "Datovy analytik"));
 
-		// Statistiky spolupráce
-		//
+
 		if (z.getListZam().isEmpty()) {
 			System.out.println("Spoluprace: Zatim neeviduje zadne kolegy.");
 		} else {
@@ -129,11 +103,10 @@ public class DB {
 
 			float prumSpol = 0;
 			for (UrovSpol u : z.getListZam().values()) {
-				prumSpol += u.ordinal() + 1; // SPATNA=1, PRUMERNA=2, DOBRA=3
+				prumSpol += u.ordinal() + 1; 
 			}
 			prumSpol = prumSpol / z.getListZam().size();
 
-			// Vypise prumer zaokrouhleny na 2 desetinna mista
 			System.out.printf("Prumerna kvalita spoluprace: %.2f (1=nejhorsi, 3=nejlepsi)%n", prumSpol);
 		}
 		System.out.println("-----------------------------------");
@@ -146,30 +119,11 @@ public class DB {
 			System.out.println("Zamestnanec s ID " + IDz + " neexistuje.");
 			return;
 		}
-
 		Zamestnanec z = DB.get(IDz);
-		// analytik potrebuje k dovednosti celou databazi
-		/*if (z instanceof DataAn) {
-			z.dovednost(DB);
-		} else if (z instanceof BezpSp) {
-			z.dovednost();
-		} else {
-			System.out.println("Nastala chyba v aplikaci");
-		}*/
-		
 		z.dovednost(DB);
 	}
 
 	public void VypisAbc() {
-		// ArrayList<String> serazene = new ArrayList<String>(DB.keySet());
-
-		/*
-		 * reseni ve stylu = iterovat pres databazi, pokud .getClass bude BezpSp
-		 * priradit do jednoho al, dataAn do druheho al
-		 * pote pouzit collection.?? metoda na serazeni prijmeni podle abecedy pro kazdy
-		 * al
-		 * 
-		 */
 
 		ArrayList<Zamestnanec> BS = new ArrayList<Zamestnanec>();
 		ArrayList<Zamestnanec> DA = new ArrayList<Zamestnanec>();
@@ -227,11 +181,10 @@ public class DB {
 				}
 				prumSpolZam = prumSpolZam / z.getListZam().size();
 				prumSpol += prumSpolZam;
-				pocetHodnoticich++; // zjistit, kolik lidi realne nekoho hodnotilo
+				pocetHodnoticich++; 
 			}
 		}
 
-		// vypis zamestnance s nejvetsim poctem spolupraci
 		if (idMaxSpol != -1 && maxSpol > 0) {
 			System.out.println("\n--- Zamestnanec s nejvice vazbami (" + maxSpol + ") ---");
 			NajitZam(idMaxSpol);
@@ -239,14 +192,11 @@ public class DB {
 			System.out.println("\nZatim nikdo neeviduje zadnou spolupraci.");
 		}
 
-		// vypis celkoveho prumeru
 		if (pocetHodnoticich > 0) {
 			prumSpol = prumSpol / pocetHodnoticich;
 			System.out.printf("Celkova prumerna kvalita spoluprace ve firme: %.2f%n", prumSpol);
 		}
 	}
-
-	// 1 = nejhorsi spoluprace, 3 nejlepsi
 
 	public void PocetZam() {
 		int bsPocet = 0;
@@ -267,11 +217,10 @@ public class DB {
 	}
 
 	public void ZapisSoubor(String jmenoSouboru) {
-		// ukradnout ze cvik
+	
 		try (FileWriter fw = new FileWriter(jmenoSouboru);
 				BufferedWriter bw = new BufferedWriter(fw)) {
-			// bw.write("Pocet: "+DB.size());
-			// bw.newLine();
+
 			for (Zamestnanec z : DB.values()) {
 				if (DB.isEmpty())
 					break;
@@ -294,36 +243,32 @@ public class DB {
 		}
 	}
 
-	// vibecoded
 	public void NacistSoubor(String jmenoSouboru) {
+		
+		DB.clear();
+		
 		try (BufferedReader br = new BufferedReader(new FileReader(jmenoSouboru))) {
 			String radek;
 
 			while ((radek = br.readLine()) != null) {
-				// Přeskočíme prázdné řádky, aby program nespadl
 				if (radek.trim().isEmpty())
 					continue;
 
-				// Rozsekáme řádek podle čárky
 				String[] casti = radek.split(",");
 
 				try {
-					// Rozhodujeme podle prvního prvku v poli
 					switch (casti[0]) {
 						case "DataAn":
 							int idDA = Integer.parseInt(casti[1]);
 							DB.put(idDA, new DataAn(idDA, casti[2], casti[3], Integer.parseInt(casti[4])));
-							// PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), true);
 							break;
 
 						case "BezpSp":
 							int idBS = Integer.parseInt(casti[1]);
 							DB.put(idBS, new BezpSp(idBS, casti[2], casti[3], Integer.parseInt(casti[4])));
-							// PridatZam(casti[2], casti[3], Integer.parseInt(casti[4]), false);
 							break;
 
 						default:
-							// Pokud to není textový kód, zkusíme, jestli jde o číselnou vazbu (např. 1,2,2)
 							if (casti.length >= 3) {
 								int odId = Integer.parseInt(casti[0]);
 								int doId = Integer.parseInt(casti[1]);
@@ -343,10 +288,6 @@ public class DB {
 		}
 	}
 
-	// potreba dve tabulky
-
-	// prvni zamestnanci klic id, jmeno, prijmeni, roknaroz, skupina
-	// druha spouprace klic id zamestnanec, id kolega, uroven spoluprace
 	public void ZapisSQL(String jmenoDB) {
 		if (!connect(jmenoDB)) {
 			System.out.println("K databazi se nebylo mozne pripojit");
@@ -354,17 +295,13 @@ public class DB {
 		}
 
 		try (Statement stmt = conn.createStatement()) {
-			// vytvoreni tabulek
 			stmt.execute(
 					"CREATE TABLE IF NOT EXISTS zamestnanci (jeDataAn INT, ID INT PRIMARY KEY, jmeno VARCHAR(50), prijm VARCHAR(50), rokNar INT)");
 			stmt.execute("CREATE TABLE IF NOT EXISTS spoluprace (IDzam INT, IDkol INT, UrovSpol INT)");
 
-			// vymazani starych dat, aby nedoslo k padu kvuli duplicitnim ID pri
-			// opakovanem zapisu
 			stmt.execute("DELETE FROM zamestnanci");
 			stmt.execute("DELETE FROM spoluprace");
 
-			// zapis vsech zamestnancu
 			String sqlZam = "INSERT INTO zamestnanci(jeDataAn, ID, jmeno, prijm, rokNar) VALUES(?,?,?,?,?)";
 			try (PreparedStatement pstmtZam = conn.prepareStatement(sqlZam)) {
 				for (Zamestnanec z : DB.values()) {
@@ -377,7 +314,6 @@ public class DB {
 				}
 			}
 
-			// zapis vsech spolupraci
 			String sqlSpol = "INSERT INTO spoluprace(IDzam, IDkol, UrovSpol) VALUES(?,?,?)";
 			try (PreparedStatement pstmtSpol = conn.prepareStatement(sqlSpol)) {
 				for (Zamestnanec z : DB.values()) {
@@ -404,12 +340,10 @@ public class DB {
 			return;
 		}
 
-		// vymazani aktualni pameti programu pred nactenim dat
 		DB.clear();
 		top = 0;
 
 		try (Statement stmt = conn.createStatement()) {
-			// nacteni zamestnancu
 			ResultSet rsZam = stmt.executeQuery("SELECT * FROM zamestnanci");
 			while (rsZam.next()) {
 				int id = rsZam.getInt("ID");
@@ -426,12 +360,10 @@ public class DB {
 				}
 				DB.put(id, z);
 
-				// kontrola cislovani pro nove zamestnance
 				if (id > top)
 					top = id;
 			}
 
-			// nacteni spolupraci a jejich prirazeni
 			ResultSet rsSpol = stmt.executeQuery("SELECT * FROM spoluprace");
 			while (rsSpol.next()) {
 				int idZ = rsSpol.getInt("IDzam");
@@ -451,7 +383,6 @@ public class DB {
 		}
 	}
 
-	// UKRADNUTO ZE CVIK pomocna metoda - pripojeni k db
 	public boolean connect(String dbCesta) {
 		conn = null;
 		try {
@@ -463,7 +394,6 @@ public class DB {
 		return true;
 	}
 
-	// UKRADENO ZE CVIK - pomocna metoda - odpojeni od db
 	public void disconnect() {
 		if (conn != null) {
 			try {
@@ -474,7 +404,6 @@ public class DB {
 		}
 	}
 
-	// pomocna metoda, vypis databaze
 	public void VypisDB() {
 		System.out.println("\n=== Kompletni vypis databaze ===");
 		if (DB.isEmpty()) {

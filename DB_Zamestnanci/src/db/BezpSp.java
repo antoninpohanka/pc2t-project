@@ -2,7 +2,7 @@ package db;
 
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Set;
+
 
 public class BezpSp extends Zamestnanec {
 
@@ -51,17 +51,13 @@ public class BezpSp extends Zamestnanec {
 
 	@Override
 	public void dovednost(HashMap<Integer, Zamestnanec> db) {
-		// System.out.println("uzivatel nema tuto dovednost");
-		// teoreticky muzeme zajistit, aby se uziv. na tuhle nikdy nedostal
 		
 		Scanner sc = new Scanner(System.in);;
 		
 		int IDkol =0;
 		
-		//Zamestnanec kolega = null;
 		int spolUrov = 0;
 		int spolPoc = 0;
-		//Set<Integer> mojeSpol = this.getListZam().keySet();
 		
 		boolean loop = true;
 		
@@ -82,7 +78,6 @@ public class BezpSp extends Zamestnanec {
 			
 		}
 	
-		// iterace pres celou databazi
 		for (Zamestnanec z : db.values()) {			
 			if(z.getListZam().containsKey(IDkol)) {
 				spolUrov+=z.getListZam().get(IDkol).ordinal();
@@ -99,7 +94,7 @@ public class BezpSp extends Zamestnanec {
 		if(spolPoc==0) {
 			System.out.println("Zamestnanec nema zadne spoluprace, riziko nelze vyhodnotit");
 		}else {
-			prumSpol = 10 - (((spolUrov/spolPoc)/(prumSpol)) * (10 / 3));
+			prumSpol = 10 - (((spolUrov/spolPoc)/(prumSpol/db.size())) * (10 / 3));
 
 		String riziko;
 
@@ -113,6 +108,8 @@ public class BezpSp extends Zamestnanec {
 
 		System.out.println("Riziko spoluprace je: " + prumSpol + " - " + riziko);
 		}
+		
+		sc.close();
 	}
 		
 	

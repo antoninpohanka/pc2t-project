@@ -17,10 +17,8 @@ public class DataAn extends Zamestnanec {
 		int spolMax = 0;
 		Set<Integer> mojeSpol = this.getListZam().keySet();
 
-		// iterace pres celou databazi
 		for (Zamestnanec z : db.values()) {
 
-			// preskakuje instanci, pro kterou je spousten (aby nehledal sam u sebe)
 			if (z.getID() == this.ID) {
 				continue;
 			}
