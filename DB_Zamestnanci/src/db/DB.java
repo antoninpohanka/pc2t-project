@@ -246,6 +246,7 @@ public class DB {
 	public void NacistSoubor(String jmenoSouboru) {
 		
 		DB.clear();
+		top = 0;
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(jmenoSouboru))) {
 			String radek;

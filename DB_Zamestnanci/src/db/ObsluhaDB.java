@@ -105,6 +105,12 @@ public class ObsluhaDB {
                     System.out.println("Zapis do souboru ukoncen.");
                     break;
                 case "11":
+                	System.out.print("Touto akci se smazou aktualni zaznamy v DB. Chcete pokracovat? (ano/ne): ");
+                    boolean stop = sc.nextLine().trim().equalsIgnoreCase("ano");
+                    if(!stop) {
+                    	System.out.println("Navrat do menu");
+                    	break;
+                    }
                     System.out.print("Zadejte nazev souboru k nacteni (napr. data.txt): ");
                     String souborNacist = sc.nextLine();
                     db.NacistSoubor(souborNacist);
@@ -117,6 +123,12 @@ public class ObsluhaDB {
                     System.out.println("Zapis do SQL ukoncen.");
                     break;
                 case "13":
+                	System.out.print("Touto akci se smazou aktualni zaznamy v DB. Chcete pokracovat? (ano/ne): ");
+                    boolean stop2 = sc.nextLine().trim().equalsIgnoreCase("ano");
+                    if(!stop2) {
+                    	System.out.println("Navrat do menu");
+                    	break;
+                    }
                     System.out.print("Zadejte nazev SQL databaze k nacteni (napr. firma.db): ");
                     String dbNacist = sc.nextLine();
                     db.NacistSQL(dbNacist);
