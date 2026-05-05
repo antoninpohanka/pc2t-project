@@ -23,9 +23,10 @@ public class BezpSp extends Zamestnanec {
 	@Override
 	public void dovednost(HashMap<Integer, Zamestnanec> db, int IDkol) {
 		
-		int spolUrov = 0;
+		float spolUrov = 0;
 		int spolPoc = 0;
-		int celkSpol =0;
+		float celkSpol = 0;
+		int celkPoc = 0;
 		
 		if(!db.containsKey(IDkol)) {
 			return;
@@ -47,12 +48,13 @@ public class BezpSp extends Zamestnanec {
 		float prumSpol = 0;
 		for (UrovSpol u : this.getListZam().values()) {
 			prumSpol += u.ordinal() + 1;
+			celkPoc++;
 		}
 		
 		if(spolPoc==0) {
 			System.out.println("Zamestnanec nema zadne spoluprace, riziko nelze vyhodnotit");
 		}else {
-			prumSpol = 10 - (((spolUrov/spolPoc)/(celkSpol/db.size())) * (10 / 3));
+			prumSpol = 10 - (((spolUrov/spolPoc)/(celkSpol/celkPoc)) * (10 / 3));
 
 		String riziko;
 
