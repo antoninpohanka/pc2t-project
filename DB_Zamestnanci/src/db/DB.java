@@ -149,13 +149,15 @@ public class DB {
 
 		Zamestnanec z = DB.get(IDz);
 		// analytik potrebuje k dovednosti celou databazi
-		if (z instanceof DataAn) {
+		/*if (z instanceof DataAn) {
 			z.dovednost(DB);
 		} else if (z instanceof BezpSp) {
 			z.dovednost();
 		} else {
 			System.out.println("Nastala chyba v aplikaci");
-		}
+		}*/
+		
+		z.dovednost(DB);
 	}
 
 	public void VypisAbc() {
@@ -283,7 +285,6 @@ public class DB {
 
 			for (Zamestnanec z : DB.values()) {
 				for (Entry<Integer, UrovSpol> k : z.getListZam().entrySet()) {
-
 					bw.write(z.getID() + "," + k.getKey() + "," + k.getValue().ordinal());
 					bw.newLine();
 				}

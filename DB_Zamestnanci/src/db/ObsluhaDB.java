@@ -93,7 +93,9 @@ public class ObsluhaDB {
                         System.out.println("Chybne zadana uroven.");
                         break;
                     }*/
-
+                    
+                   db.PridatSpol(idZ, idK, UrovSpol.values()[uroven-1]);
+                    
                     // Vypise uspesne zapsani jen tehdy, kdyz metoda vrati true (napr. pokud obe ID
                     // existuji); zmenil jsem metodu PridatSpol, aby vracela boolean
                     

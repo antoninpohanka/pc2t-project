@@ -1,6 +1,8 @@
 package db;
 
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.Set;
 
 public class BezpSp extends Zamestnanec {
 
@@ -9,11 +11,11 @@ public class BezpSp extends Zamestnanec {
 
 	}
 
-	@Override
+	/*@Override
 	public void dovednost() {
 		// nepotrebuje parametr,
 		// podobny algoritmus u bezpsp ale aplikovany na celou db
-		float prumSpol = 0;
+		/*float prumSpol = 0;
 
 		// mozna misto tohodle pouzit metodu z DB co pocita prumernou spolupraci?
 		for (UrovSpol u : this.getListZam().values()) {
@@ -39,8 +41,8 @@ public class BezpSp extends Zamestnanec {
 		}
 
 		System.out.println("Riziko spoluprace je: " + prumSpol + " - " + riziko);
-
-	}
+		
+	} */
 
 	@Override
 	public String toString() {
@@ -51,7 +53,68 @@ public class BezpSp extends Zamestnanec {
 	public void dovednost(HashMap<Integer, Zamestnanec> db) {
 		// System.out.println("uzivatel nema tuto dovednost");
 		// teoreticky muzeme zajistit, aby se uziv. na tuhle nikdy nedostal
+		
+		Scanner sc = new Scanner(System.in);;
+		
+		int IDkol =0;
+		
+		//Zamestnanec kolega = null;
+		int spolUrov = 0;
+		int spolPoc = 0;
+		//Set<Integer> mojeSpol = this.getListZam().keySet();
+		
+		boolean loop = true;
+		
+		while (loop) {
+    		try {
+    			System.out.println("Zadejte cislo kolegy: ");
+    			String vstup = sc.nextLine();
+    			int cislo=Integer.parseInt(vstup);
+    			if(cislo<0 || cislo>db.size()) {
+    				System.out.println("Chyba: Cislo musi byt mezi 0" + " - " + db.size());
+    			}else {	
+    				IDkol = cislo;
+    				loop = false;
+    			}	
+    		} catch (NumberFormatException e) {
+    			System.out.println("Nebylo zadano cele cislo");
+    	    }	
+			
+		}
+	
+		// iterace pres celou databazi
+		for (Zamestnanec z : db.values()) {			
+			if(z.getListZam().containsKey(IDkol)) {
+				spolUrov+=z.getListZam().get(IDkol).ordinal();
+				spolPoc++;
+			}
+			
+		}
+		
+		float prumSpol = 0;
+		for (UrovSpol u : this.getListZam().values()) {
+			prumSpol += u.ordinal() + 1;
+		}
+		
+		if(spolPoc==0) {
+			System.out.println("Zamestnanec nema zadne spoluprace, riziko nelze vyhodnotit");
+		}else {
+			prumSpol = 10 - (((spolUrov/spolPoc)/(prumSpol)) * (10 / 3));
 
+		String riziko;
+
+		if (prumSpol < 4) {
+			riziko = "nizke";
+		} else if (prumSpol >= 4 || prumSpol <= 6) {
+			riziko = "stredni";
+		} else {
+			riziko = "vysoke";
+		}
+
+		System.out.println("Riziko spoluprace je: " + prumSpol + " - " + riziko);
+		}
 	}
-
+		
+	
 }
+
